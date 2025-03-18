@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # CV_HW_1
 CVclass_HW_SMILE
 
@@ -74,7 +73,21 @@ CVclass_HW_SMILE
  + 구현 결과
 
    + <img width="648" alt="image" src="https://github.com/user-attachments/assets/e52440d4-c03f-4f7d-81c1-26191c186db5" />
-=======
-# CV_HW
+
+# CV_HW_2
 CVclass_HW_SMILE
->>>>>>> 6b14898 (+HW2)
+
+# 과제 1
+
++ 주요 코드
+ 
+  + gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY) # 그레이스케일로 변환.
+  + t, bin_img = cv.threshold(gray, 127, 255, cv.THRESH_BINARY+cv.THRESH_OTSU) # 이진화 
+  + imgs = np.hstack((img,gray_img)) # imgs에 원본 이미지와, 회색으로 바꾼 이미지를 가로로 이어붙임.
+
+
+ + 구현 결과
+
+   + <img width="1210" alt="image" src="https://github.com/user-attachments/assets/34de0cfc-c2fb-4d38-a2c5-4798fc39aede" />
+
+
