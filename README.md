@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CV_HW_1
 CVclass_HW_SMILE
 
@@ -73,3 +74,7 @@ CVclass_HW_SMILE
  + 구현 결과
 
    + <img width="648" alt="image" src="https://github.com/user-attachments/assets/e52440d4-c03f-4f7d-81c1-26191c186db5" />
+=======
+# CV_HW
+CVclass_HW_SMILE
+>>>>>>> 6b14898 (+HW2)
