@@ -1,4 +1,4 @@
-# CV_HW
+# CV_HW_1
 CVclass_HW_SMILE
 
 # 과제 1
