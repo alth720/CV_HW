@@ -112,7 +112,7 @@ CVclass_HW_SMILE
  + 구현 결과
 
    + <img width="990" alt="image" src="https://github.com/user-attachments/assets/8f926a30-1b3c-4273-80e7-68718d42f7dd" />
-   + 원본 - 팽창 - 침식 - 열림 - 닫힘 
+   +      원본                      팽창                       침식                       열림                        닫힘 
 
 
 # 과제 3
