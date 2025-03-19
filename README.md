@@ -83,14 +83,18 @@ CVclass_HW_SMILE
  
   + gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY) # 그레이스케일로 변환.
   + t, bin_img = cv.threshold(gray, 127, 255, cv.THRESH_BINARY+cv.THRESH_OTSU) # 이진화, t는 오츄 알고리즘이 찾은 최적 임곗값
-  + h = cv.calcHist([bin_img], [0], None, [256], [0, 256]) # 히스토그램 계산
+  + h1 = cv.calcHist([gray], [0], None, [256], [0, 256]) # 그레이스케일 히스토그램 계산
+  + h2 = cv.calcHist([bin_img], [0], None, [256], [0, 256]) # 이진화된 이미지 히스토그램 계산
   + cv.imshow('Binary Image', bin_img) # 이진화된 이미지 출력.
-  + plt.plot(h, color = 'r', linewidth = 1), plt.show() # 이진화된 이미지의 히스토그램 출력. 
+  + plt.plot(h1, color = 'b', linewidth = 1), plt.show() # 그레이스케일 히스토그램은 파란색 선으로 출력.
+  + plt.plot(h2, color = 'r', linewidth = 1), plt.show() # 이진화된 이미지의 히스토그램은 빨간색 선으로 출력. 
 
 
  + 구현 결과
 
    + <img width="1167" alt="image" src="https://github.com/user-attachments/assets/77ca9389-61ea-4d66-8676-67380c0cd9d5" />
+   <img width="482" alt="image" src="https://github.com/user-attachments/assets/9113423e-22fe-46cc-b8bb-f96d186bf226" />
+
 
 
 # 과제 2
