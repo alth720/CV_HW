@@ -132,3 +132,74 @@ CVclass_HW_SMILE
  + 구현 결과
 
    + <img width="895" alt="image" src="https://github.com/user-attachments/assets/388c90b3-c899-485b-bf3a-d2a5f0146b3f" />
+
+
+# CV_HW_3
+CVclass_HW_SMILE
+
+# 과제 1
+
++ 주요 코드
+ 
+  + grad_x = cv.Sobel(gray_img, cv.CV_64F, 1, 0, ksize = 3) # 소벨 연산자 적용
+  + grad_y = cv.Sobel(gray_img, cv.CV_64F, 0, 1, ksize = 3)
+  + magnitude = cv.magnitude(grad_x, grad_y) # 에지 강도 계산
+  + edge_strength = cv.convertScaleAbs(magnitude) # 절댓값을 취해 양수 영상으로 변환
+  + plt.figure(figsize=(10, 5)) # matplotlib로 시각화
+
+
+ + 구현 결과
+
+   + <img width="745" alt="image" src="https://github.com/user-attachments/assets/9b0e80e0-1466-4df6-9dcc-9c8ee30e6ada" />
+
+
+
+# 과제 2
+
++ 주요 코드
+ 
+  + lines = cv.HoughLinesP(
+    canny,              # 입력 에지 이미지
+    rho=1,              # 거리 해상도 (픽셀 단위)
+    theta=np.pi/180,    # 각도 해상도 (라디안 단위)
+    threshold=60,       # 직선으로 판단할 최소 교차점 수
+    minLineLength=40,   # 직선으로 간주할 최소 길이
+    maxLineGap=20       # 동일 선상의 점들을 연결할 최대 간격
+)  # 허프 변환을 통한 직선 검출
+
+  + if lines is not None:
+    for line in lines:
+        x1, y1, x2, y2 = line[0]
+        cv.line(img_lines, (x1, y1), (x2, y2), (0, 0, 255), 2)  # 직선 그리기 
+  + plt.figure(figsize=(10, 5))  # matplotlib로 원본 이미지 + 직선 검출 이미지 나란히 표시
+
+ + 구현 결과
+
+   + <img width="748" alt="image" src="https://github.com/user-attachments/assets/c20f6c56-a4a4-4b84-8d5b-657cba0a996b" />
+
+
+
+
+# 과제 3
+
++ 주요 코드
+ 
+  + rect = (100, 90, 1100, 800)  # 초기 사각형 설정 (x, y, width, height)
+  + # GrabCut을 위한 초기 마스크 및 모델 생성
+  + mask = np.zeros(src.shape[:2], np.uint8)
+  + bgdModel = np.zeros((1, 65), np.float64)
+  + fgdModel = np.zeros((1, 65), np.float64)
+  + # GrabCut 실행 (5회 반복)
+  + cv.grabCut(src, mask, rect, bgdModel, fgdModel, 5, cv.GC_INIT_WITH_RECT)
+  + # 마스크 후처리: 전경(1) 및 전경(3)만 1, 나머지는 0
+  + mask2 = np.where((mask == cv.GC_FGD) | (mask == cv.GC_PR_FGD), 1, 0).astype('uint8')
+  + # 배경 제거된 이미지 생성
+  + result = src_rgb * mask2[:, :, np.newaxis]
+  + # 마스크 시각화용 이미지 생성
+  + visual_mask = (mask2 * 255).astype('uint8')
+
+
+ + 구현 결과
+
+   + <img width="1121" alt="image" src="https://github.com/user-attachments/assets/d35011ce-0a70-4e1e-9cf0-f29e6f239afd" />
+
