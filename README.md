@@ -198,3 +198,86 @@ CVclass_HW_SMILE
 
    + <img width="1121" alt="image" src="https://github.com/user-attachments/assets/d35011ce-0a70-4e1e-9cf0-f29e6f239afd" />
 
+
+# CV_HW_4
+CVclass_HW_SMILE
+
+# 과제 1( SIFT를 이용한특징점검출및시각화)
+
++ 주요 코드
+ 
+  + sift = cv.SIFT_create(0, 3, 0.1, 10, 2) # SIFT 객체 생성. cv2..SIFT_create(nfeatures, nOctaveLayers, contrastThreshold, edgeThreshold, sigma)
+nfeatures: 검출 최대 특징 수
+nOctaveLayers: 이미지 피라미드에 사용할 계층 수
+contrastThreshold: 필터링할 빈약한 특징 문턱 값
+edgeThreshold: 필터링할 엣지 문턱 값
+sigma: 이미지 피라미드 0 계층에서 사용할 가우시안 필터의 시그마 값
+  + kp, des = sift.detectAndCompute(gray, None)  # 키 포인트 검출 및 서술자 계산
+  + gray = cv.drawKeypoints(gray, kp, None, flags = cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)  # 키포인트 그리기 **cv.DrawMatchesFlags_DRAW_RICH_KEYPOINTS 플래그에 의해서 원의 크기는 특징점이 검출된 스케일 크기의 영향을 받으며, 검출된 스케일에 비례하는 크기의 원이 그려짐(원이 클수록 해당 특징점은 더 큰 영역에서 의미 있는 패턴을 가지고 있으며, 작은 원은 더 세밀한 특징을 나타낸다고 해석할 수 있음)**
+  + plt.imshow(cv.cvtColor(img, cv.COLOR_BGR2RGB)) # matplotlib는 BGR이 아니라 RGB
+  + plt.imshow(cv.cvtColor(gray, cv.COLOR_BGR2RGB))
+
+
+ + 구현 결과
+
+   + <img width="570" alt="image" src="https://github.com/user-attachments/assets/d23aaaa8-158c-4a67-9b5c-67d77e858439" />
+
+
+
+
+# 과제 2
+
++ 주요 코드
+ 
+  + img1 = cv.imread('mot_color70.jpg')[190:350, 440:560]  # 버스를 크롭하여 모델 영상으로 사용
+  + gray1 = cv.cvtColor(img1, cv.COLOR_BGR2GRAY) # img1 그레이 스케일로 변환
+  + img2 = cv.imread('mot_color83.jpg')  # img2는 원본 크기 그대로 사용
+  + gray2 = cv.cvtColor(img2, cv.COLOR_BGR2GRAY)  # img2 그레이 스케일로 변환
+  + sift = cv.SIFT_create(0, 3, 0.1, 10, 2)  # SIFT 객체 생성
+  + kp1, des1 = sift.detectAndCompute(gray1, None)
+  + kp2, des2 = sift.detectAndCompute(gray2, None)  # gray1, gray2 키 포인트 검출 및 서술자 계산
+  + FLANN_INDEX_KDTREE = 1  # 인덱스 파라미터 설정
+  + index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=10)
+  + search_params = dict(checks=90) # 검색 파라미터 설정
+  + matcher = cv.FlannBasedMatcher(index_params, search_params)  # Flann 매처 생성
+  + matches = matcher.knnMatch(des1, des2, k = 2)  # 매칭 계산
+  + T = 0.7
+    good_match = []
+    for nearest1, nearest2 in matches:
+        if (nearest1.distance/nearest2.distance) < T:
+            good_match.append(nearest1)  # Ratio Test 적용
+  + img_match = cv.drawMatches(img1, kp1, img2, kp2, good_match, None, flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS) # 매칭 그리기
+  + plt.imshow(cv.cvtColor(img_match, cv.COLOR_BGR2RGB))  # 특징점 매칭 이미지
+ 
+  + BFMatcher 생성(L2 norm은 SIFT에 적합) 하고 싶을 땐
+  + bf = cv.BFMatcher(cv.NORM_L2)  # 이 코드로 간단하게 생성 가능 
+
+
+ + 구현 결과
+
+   + <img width="551" alt="image" src="https://github.com/user-attachments/assets/c1d6a849-8552-46b0-85d3-0e239a8666e4" />
+
+
+
+
+
+# 과제 3
+
++ 주요 코드
+ 
+  + bf = cv.BFMatcher(cv.NORM_L2)  # cv2.BFMatcher_create(normType, crossCheck) **normType: 거리 측정 알고리즘 (cv2.NORM_L1, cv2.NORM_L2(default), cv2.NORM_L2SQR, cv2.NORM_HAMMING, cv2.NORM_HAMMING2)
+crosscheck: 상호 매칭이 되는 것만 반영 (default=False)**
+  + matches = bf.knnMatch(des1, des2, k=2)  # 매칭 계산
+  + points1 = np.float32([kp1[m.queryIdx].pt for m in good_match])
+  + points2 = np.float32([kp2[m.trainIdx].pt for m in good_match])  # 매칭점 추출
+  + H, _ = cv.findHomography(points1, points2, cv.RANSAC)  # 호모그래피 행렬 계산 (RANSAC 사용)
+  + warped_img = cv.warpPerspective(img1, H, (img2.shape[1], img2.shape[0]))  # 투시 변환 적용 (img1을 img2에 정렬)
+  + overlay = cv.addWeighted(warped_img, 0.5, img2, 0.5, 0)  # 두 이미지(원본 이미지, 투시 변환 적용 이미지)를 반투명하게 변환.
+
+
+ + 구현 결과
+
+   + <img width="652" alt="image" src="https://github.com/user-attachments/assets/21807ac5-4ae2-43e2-a7c6-6c171fecee1b" />
+
+
+
