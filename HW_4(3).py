@@ -34,24 +34,33 @@ H, _ = cv.findHomography(points1, points2, cv.RANSAC)
 # 투시 변환 적용 (img1을 img2에 정렬)
 warped_img = cv.warpPerspective(img1, H, (img2.shape[1], img2.shape[0]))
 
-# 원본 이미지
-plt.subplot(1, 3, 1)
+img_match = cv.drawMatches(img1, kp1, img2, kp2, good_match, None, flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+
+plt.figure(figsize=(12, 4))
+
+# 1. 원본 이미지
+plt.subplot(2, 2, 1)
 plt.imshow(cv.cvtColor(img1, cv.COLOR_BGR2RGB))
 plt.title("Original Image")
 plt.axis('off')
 
-# 투시 변환 이미지
-plt.subplot(1, 3, 2)
+# 2. 투시 변환 이미지
+plt.subplot(2, 2, 2)
 plt.imshow(cv.cvtColor(warped_img, cv.COLOR_BGR2RGB))
-plt.title("Homography")
+plt.title("Warped (Homography)")
 plt.axis('off')
 
-# 반투명 이미지 합성 (겹쳐서 보기)
+# 3. 오버레이 이미지
 overlay = cv.addWeighted(warped_img, 0.5, img2, 0.5, 0)  # 두 이미지 평균값
-
-plt.subplot(1, 3, 3)
+plt.subplot(2, 2, 3)
 plt.imshow(cv.cvtColor(overlay, cv.COLOR_BGR2RGB))
 plt.title("Overlay (Transparent)")
+plt.axis('off')
+
+# 4. 특징점 매칭 이미지
+plt.subplot(2, 2, 4)
+plt.imshow(cv.cvtColor(img_match, cv.COLOR_BGR2RGB))
+plt.title("Feature Matching")
 plt.axis('off')
 
 plt.tight_layout()
