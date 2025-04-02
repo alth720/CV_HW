@@ -277,7 +277,8 @@ crosscheck: 상호 매칭이 되는 것만 반영 (default=False)**
 
  + 구현 결과
 
-   + <img width="652" alt="image" src="https://github.com/user-attachments/assets/21807ac5-4ae2-43e2-a7c6-6c171fecee1b" />
+   + <img width="769" alt="image" src="https://github.com/user-attachments/assets/6662136d-db84-4766-892c-fd39fe45cf4f" />
+
 
 
 
