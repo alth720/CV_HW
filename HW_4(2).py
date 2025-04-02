@@ -30,6 +30,20 @@ for nearest1, nearest2 in matches:
     if (nearest1.distance/nearest2.distance) < T:
         good_match.append(nearest1)
 
+""" # BFMatcher 생성 (L2 norm은 SIFT에 적합)
+bf = cv.BFMatcher(cv.NORM_L2)
+
+# knnMatch로 k=2 설정 (두 개의 최근접 이웃)
+matches = bf.knnMatch(des1, des2, k=2)
+
+# Ratio Test 적용
+T = 0.7
+good_match = []
+for nearest1, nearest2 in matches:
+    if (nearest1.distance / nearest2.distance) < T:
+        good_match.append(nearest1)
+ """
+
 img_match = cv.drawMatches(img1, kp1, img2, kp2, good_match, None, flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
 
 # 특징점 매칭 이미지

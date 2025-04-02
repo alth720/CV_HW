@@ -35,15 +35,23 @@ H, _ = cv.findHomography(points1, points2, cv.RANSAC)
 warped_img = cv.warpPerspective(img1, H, (img2.shape[1], img2.shape[0]))
 
 # 원본 이미지
-plt.subplot(1, 2, 1)
+plt.subplot(1, 3, 1)
 plt.imshow(cv.cvtColor(img1, cv.COLOR_BGR2RGB))
 plt.title("Original Image")
 plt.axis('off')
 
-# 투시 변환 적용 이미지 
-plt.subplot(1, 2, 2)
+# 투시 변환 이미지
+plt.subplot(1, 3, 2)
 plt.imshow(cv.cvtColor(warped_img, cv.COLOR_BGR2RGB))
 plt.title("Homography")
+plt.axis('off')
+
+# 반투명 이미지 합성 (겹쳐서 보기)
+overlay = cv.addWeighted(warped_img, 0.5, img2, 0.5, 0)  # 두 이미지 평균값
+
+plt.subplot(1, 3, 3)
+plt.imshow(cv.cvtColor(overlay, cv.COLOR_BGR2RGB))
+plt.title("Overlay (Transparent)")
 plt.axis('off')
 
 plt.tight_layout()
