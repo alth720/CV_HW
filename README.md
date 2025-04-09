@@ -285,13 +285,8 @@ crosscheck: 상호 매칭이 되는 것만 반영 (default=False)**
 
 
 
-   + <img width="664" alt="image" src="https://github.com/user-attachments/assets/174b3e7c-038c-44bf-a0ec-8c27102cf7e2" />
-   + <img width="110" alt="image" src="https://github.com/user-attachments/assets/124de819-d6db-43cc-b97e-b7598b0a5124" />
-
-
-
-
-
-
-
-
+   + <img width="476" alt="image" src="https://github.com/user-attachments/assets/c2915b4b-efac-4dda-981a-85deb2488fb2" />
+   + <img width="113" alt="image" src="https://github.com/user-attachments/assets/9334cd2f-0afe-4e48-9d9c-a8ece2725f72" />
+   + <img width="476" alt="image" src="https://github.com/user-attachments/assets/b048b5c0-8c25-48e8-9405-d89cdce80f3d" />
+   + <img width="476" alt="image" src="https://github.com/user-attachments/assets/24b7986e-9614-4565-bfce-293d3a647868" />
+   + <img width="473" alt="image" src="https://github.com/user-attachments/assets/11c3f6c3-20ca-48d7-82fb-26c1cbcf4223" />
