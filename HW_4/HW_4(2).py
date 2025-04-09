@@ -3,9 +3,9 @@ import numpy as np
 import time
 import matplotlib.pyplot as plt
 
-img1 = cv.imread('mot_color70.jpg')[190:350, 440:560]  # 버스를 크롭하여 모델 영상으로 사용 
+img1 = cv.imread('IMG/mot_color70.jpg')[190:350, 440:560]  # 버스를 크롭하여 모델 영상으로 사용 
 gray1 = cv.cvtColor(img1, cv.COLOR_BGR2GRAY)
-img2 = cv.imread('mot_color83.jpg')
+img2 = cv.imread('IMG/mot_color83.jpg')
 gray2 = cv.cvtColor(img2, cv.COLOR_BGR2GRAY)
 
 sift = cv.SIFT_create(0, 3, 0.1, 10, 2)

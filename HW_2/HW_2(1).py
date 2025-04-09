@@ -3,7 +3,7 @@ import cv2 as cv
 import sys
 import matplotlib.pyplot as plt
 
-img = cv.imread('mistyroad.jpg')
+img = cv.imread('IMG/mistyroad.jpg')
 
 gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 

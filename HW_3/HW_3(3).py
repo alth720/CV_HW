@@ -3,7 +3,7 @@ import cv2 as cv
 import matplotlib.pyplot as plt
 
 # 이미지 불러오기
-src = cv.imread('coffee cup.JPG')
+src = cv.imread('IMG/coffee cup.JPG')
 src_rgb = cv.cvtColor(src, cv.COLOR_BGR2RGB)
 
 # 초기 사각형 설정 (x, y, width, height)

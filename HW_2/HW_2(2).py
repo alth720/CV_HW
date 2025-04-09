@@ -2,7 +2,7 @@ import numpy as np
 import cv2 as cv
 import matplotlib.pyplot as plt
 
-img = cv.imread('JohnHancocksSignature.png', cv.IMREAD_UNCHANGED)
+img = cv.imread('IMG/JohnHancocksSignature.png', cv.IMREAD_UNCHANGED)
 
 t, bin_img = cv.threshold(img[:,:,3], 0, 255, cv.THRESH_BINARY+cv.THRESH_OTSU)
 

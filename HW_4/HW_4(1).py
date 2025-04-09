@@ -1,7 +1,7 @@
 import cv2 as cv
 import matplotlib.pyplot as plt
 
-img = cv.imread('mot_color70.jpg')
+img = cv.imread('IMG/mot_color70.jpg')
 gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
 sift = cv.SIFT_create(0, 3, 0.1, 10, 2) # SIFT 객체 생성성

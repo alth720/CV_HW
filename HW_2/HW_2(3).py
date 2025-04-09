@@ -1,7 +1,7 @@
 import numpy as np
 import cv2 as cv
 
-img = cv.imread('rose.png')
+img = cv.imread('IMG/rose.png')
 
 rows, cols = img.shape[:2]
 

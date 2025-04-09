@@ -2,9 +2,9 @@ import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
 
-img1 = cv.imread('img1.jpg')
+img1 = cv.imread('IMG/img1.jpg')
 gray1 = cv.cvtColor(img1, cv.COLOR_BGR2GRAY)
-img2 = cv.imread('img2.jpg')
+img2 = cv.imread('IMG/img2.jpg')
 gray2 = cv.cvtColor(img2, cv.COLOR_BGR2GRAY)
 
 sift = cv.SIFT_create(0, 3, 0.1, 10, 2)

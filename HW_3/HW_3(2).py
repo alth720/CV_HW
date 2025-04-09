@@ -3,7 +3,7 @@ import cv2 as cv
 import sys
 import matplotlib.pyplot as plt
 
-img = cv.imread('edgeDetectionImage.jpg')
+img = cv.imread('IMG/edgeDetectionImage.jpg')
 imgS = cv.resize(img, dsize = (0, 0), fx = 0.5, fy = 0.5)
 gray = cv.cvtColor(imgS, cv.COLOR_BGR2GRAY)
 canny = cv.Canny(gray, 100, 200)
