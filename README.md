@@ -285,6 +285,12 @@ crosscheck: 상호 매칭이 되는 것만 반영 (default=False)**
 
 
 
+   + <img width="664" alt="image" src="https://github.com/user-attachments/assets/174b3e7c-038c-44bf-a0ec-8c27102cf7e2" />
+   + <img width="110" alt="image" src="https://github.com/user-attachments/assets/124de819-d6db-43cc-b97e-b7598b0a5124" />
+
+
+
+
 
 
 
