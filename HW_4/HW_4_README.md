@@ -1,95 +1,57 @@
-# CV_HW_4
+# CV_HW_2
 
-## 📂 과제 1 –  SIFT를 이용한 특징점 검출 및 시각화
+## 📂 과제 1 – 이진화 및 히스토그램 구하기
 
 ### 📌 주요 코드
 ```python
-sift = cv.SIFT_create(0, 3, 0.1, 10, 2)  # SIFT 객체 생성
-
-cv2.SIFT_create(nfeatures, nOctaveLayers, contrastThreshold, edgeThreshold, sigma)
-# nfeatures: 검출 최대 특징 수
-# nOctaveLayers: 이미지 피라미드에 사용할 계층 수
-# contrastThreshold: 필터링할 빈약한 특징 문턱 값
-# edgeThreshold: 필터링할 엣지 문턱 값
-# sigma: 이미지 피라미드 0 계층에서 사용할 가우시안 필터의 시그마 값
-
-kp, des = sift.detectAndCompute(gray, None)  # 키 포인트 검출 및 서술자 계산
-
-gray = cv.drawKeypoints(gray, kp, None, flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)  # 특징점 시각화
-# cv.DrawMatchesFlags_DRAW_RICH_KEYPOINTS 플래그에 의해서 원의 크기는 특징점이 검출된 스케일 크기의 영향을 받으며, 검출된 스케일에 비례하는 크기의 원이 그려짐(원이 클수록 해당 특징점은 더 큰 영역에서 의미 있는 패턴을 가지고 있으며, 작은 원은 더 세밀한 특징을 나타낸다고 해석할 수 있음)
-
-plt.imshow(cv.cvtColor(img, cv.COLOR_BGR2RGB))  # 원본 이미지 표시(matplotlib는 BGR이 아니라 RGB)
-plt.imshow(cv.cvtColor(gray, cv.COLOR_BGR2RGB))  # 특징점 이미지 표시
+gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)  # 그레이스케일로 변환
+t, bin_img = cv.threshold(gray, 127, 255, cv.THRESH_BINARY + cv.THRESH_OTSU)  # 이진화, t는 오츄 알고리즘이 찾은 최적 임곗값
+h1 = cv.calcHist([gray], [0], None, [256], [0, 256])  # 그레이스케일 히스토그램 계산
+h2 = cv.calcHist([bin_img], [0], None, [256], [0, 256])  # 이진화된 이미지 히스토그램 계산
+cv.imshow('Binary Image', bin_img)  # 이진화된 이미지 출력
+plt.plot(h1, color='b', linewidth=1), plt.show()  # 그레이스케일 히스토그램은 파란색 선으로 출력
+plt.plot(h2, color='r', linewidth=1), plt.show()  # 이진화된 이미지의 히스토그램은 빨간색 선으로 출력
 ```
 
 ### ✅ 구현 결과
-<img width="570" alt="image" src="https://github.com/user-attachments/assets/d23aaaa8-158c-4a67-9b5c-67d77e858439" />
+<img width="1167" alt="image" src="https://github.com/user-attachments/assets/77ca9389-61ea-4d66-8676-67380c0cd9d5" />
+<img width="482" alt="image" src="https://github.com/user-attachments/assets/9113423e-22fe-46cc-b8bb-f96d186bf226" />
 
 
 
-## 📂 과제 2 –  SIFT를 이용한 두 영상 간 특징점 매칭
-
-### 📌 주요 코드
-```python
-img1 = cv.imread('mot_color70.jpg')[190:350, 440:560]  # 버스를 크롭하여 모델 영상으로 사용
-gray1 = cv.cvtColor(img1, cv.COLOR_BGR2GRAY)  # 버스를 크롭하여 모델 영상으로 사용
-img2 = cv.imread('mot_color83.jpg')  # img2는 원본 크기 그대로 사용
-gray2 = cv.cvtColor(img2, cv.COLOR_BGR2GRAY)  # img2 그레이 스케일로 변환
-
-sift = cv.SIFT_create(0, 3, 0.1, 10, 2)  # SIFT 객체 생성
-
-# gray1, gray2 키 포인트 검출 및 서술자 계산
-kp1, des1 = sift.detectAndCompute(gray1, None)
-kp2, des2 = sift.detectAndCompute(gray2, None)
-
-# FLANN 매칭 설정
-FLANN_INDEX_KDTREE = 1  # 인덱스 파라미터 설정
-index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=10)
-search_params = dict(checks=90)  # 검색 파라미터 설정
-
-matcher = cv.FlannBasedMatcher(index_params, search_params)  # Flann 매처 생성
-matches = matcher.knnMatch(des1, des2, k=2)  # 매칭 계산
-
-# Ratio Test 적용
-T = 0.7
-good_match = []
-for nearest1, nearest2 in matches:
-    if (nearest1.distance / nearest2.distance) < T:
-        good_match.append(nearest1)
-
-img_match = cv.drawMatches(img1, kp1, img2, kp2, good_match, None,
-                           flags=cv.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)  # 매칭 그리기
-plt.imshow(cv.cvtColor(img_match, cv.COLOR_BGR2RGB))  # 특징점 매칭 이미지
-
-# 또는 BFMatcher 사용:
-# bf = cv.BFMatcher(cv.NORM_L2)
-```
-
-### ✅ 구현 결과
-<img width="551" alt="image" src="https://github.com/user-attachments/assets/c1d6a849-8552-46b0-85d3-0e239a8666e4" />  
-
-
-## 📂 과제 3 – 호모그래피를 이용한 이미지 정합(Image Alignment)
+## 📂 과제 2 – 모폴로지 연산 적용하기
 
 ### 📌 주요 코드
 ```python
-bf = cv.BFMatcher(cv.NORM_L2)  # Brute Force 매칭기 생성
-# cv2.BFMatcher_create(normType, crossCheck)
-# normType: 거리 측정 알고리즘 (cv2.NORM_L1, cv2.NORM_L2(default), cv2.NORM_L2SQR, cv2.NORM_HAMMING, cv2.NORM_HAMMING2)
-# crosscheck: 상호 매칭이 되는 것만 반영 (default=False)
-
-matches = bf.knnMatch(des1, des2, k=2)  # 매칭 계산
-
-# 매칭된 점 추출
-points1 = np.float32([kp1[m.queryIdx].pt for m in good_match])
-points2 = np.float32([kp2[m.trainIdx].pt for m in good_match]) 
-
-H, _ = cv.findHomography(points1, points2, cv.RANSAC)  # 호모그래피 행렬 계산 (RANSAC 사용)
-
-warped_img = cv.warpPerspective(img1, H, (img2.shape[1], img2.shape[0]))  # 투시 변환 적용 (img1을 img2에 정렬)
-overlay = cv.addWeighted(warped_img, 0.5, img2, 0.5, 0)  # 두 이미지 합성 (반투명)
+b = bin_img[bin_img.shape[0]//2:bin_img.shape[0], 0:bin_img.shape[0]//2+1]  # 이미지 하단 왼쪽 부분 추출
+se = cv.getStructuringElement(cv.MORPH_RECT, (5, 5))  # 사각형 커널 생성(5x5)
+dilation = cv.morphologyEx(b, cv.MORPH_DILATE, se)  # 팽창(흰색 영역 확장) -> 객체가 더 굵어짐 
+erosion = cv.morphologyEx(b, cv.MORPH_ERODE, se)  # 침식(흰색 영역을 줄임) -> 객체가 더 얇아짐
+opening = cv.morphologyEx(b, cv.MORPH_OPEN, se)  # 열림(침식 후 팽창 수행) -> 작은 노이즈 제거
+closing = cv.morphologyEx(b, cv.MORPH_CLOSE, se)  # 닫힘(팽창 후 침식 수행) -> 내부 구멍 채움
+mp = np.hstack((b, dilation, erosion, opening, closing))  # 이어붙여 한 화면에 출력
 
 ```
 
 ### ✅ 구현 결과
-<img width="896" alt="image" src="https://github.com/user-attachments/assets/542836fe-a009-48c2-bf31-53fa079d5229" />
+<img width="990" alt="image" src="https://github.com/user-attachments/assets/8f926a30-1b3c-4273-80e7-68718d42f7dd" />
++ 원본  팽창  침식  열림  닫힘  
+
+
+## 📂 과제 3 – 기하연산및선형보간적용하기
+
+### 📌 주요 코드
+```python
+rows, cols = img.shape[:2]  # 이미지 크기
+center = (cols // 2, rows // 2)  # 중심 좌표
+angle = 45  # 회전 각도
+scale = 1.5  # 스케일 1.5배
+rot_matrix = cv.getRotationMatrix2D(center, angle, scale)  # 회전 변환 행렬 생성
+rot_img = cv.warpAffine(img, rot_matrix, (cols, rows), flags=cv.INTER_LINEAR)  # 회전 및 확대, cv.INTER_LINEAR를 사용해 선형 보간 
+img_small = cv.resize(img, dsize=(0, 0), fx=0.5, fy=0.5)  # 출력 이미지가 너무 커서 절반으로 줄임
+rotImg_small = cv.resize(rot_img, dsize=(0, 0), fx=0.5, fy=0.5)  # 회전 및 확대한 이미지도 마찬가지
+imgs = np.hstack((img_small, rotImg_small))  # 이어붙여 한 화면에 출력
+```
+
+### ✅ 구현 결과
+<img width="895" alt="image" src="https://github.com/user-attachments/assets/388c90b3-c899-485b-bf3a-d2a5f0146b3f" />

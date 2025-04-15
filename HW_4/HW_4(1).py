@@ -1,25 +1,22 @@
+import numpy as np
 import cv2 as cv
+import sys
 import matplotlib.pyplot as plt
 
-img = cv.imread('IMG/mot_color70.jpg')
+img = cv.imread('IMG/mistyroad.jpg')
+
 gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
-sift = cv.SIFT_create(0, 3, 0.1, 10, 2) # SIFT 객체 생성성
-kp, des = sift.detectAndCompute(gray, None)  # 키 포인트 검출 및 서술자 계산
+t, bin_img = cv.threshold(gray, 127, 255, cv.THRESH_BINARY+cv.THRESH_OTSU) # 이진화 
+print('오츄 알고리즘이 찾은 최적 임곗값=', t)
 
-gray = cv.drawKeypoints(gray, kp, None, flags = cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)  # 키포인트 그리기 
+h1 = cv.calcHist([gray], [0], None, [256], [0, 256]) # 히스토그램 계산
+h2 = cv.calcHist([bin_img], [0], None, [256], [0, 256]) # 히스토그램 계산 
 
-# 원본 이미지
-plt.subplot(1, 2, 1)
-plt.imshow(cv.cvtColor(img, cv.COLOR_BGR2RGB))
-plt.title("Original Image")
-plt.axis('off')
+cv.imshow('Binary Image', bin_img)
 
-# 특징점 검출 이미지
-plt.subplot(1, 2, 2)
-plt.imshow(cv.cvtColor(gray, cv.COLOR_BGR2RGB))
-plt.title("SIFT")
-plt.axis('off')
+plt.plot(h1, color = 'b', linewidth = 1), plt.show()
+plt.plot(h2, color = 'r', linewidth = 1), plt.show()
 
-plt.tight_layout()
-plt.show()
+cv.waitKey()
+cv.destroyAllWindows()

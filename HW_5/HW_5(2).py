@@ -1,72 +1,43 @@
-# 1. 필요한 라이브러리 불러오기
-import tensorflow as tf
-from tensorflow.keras import layers, models
-from tensorflow.keras.datasets import cifar10
-from tensorflow.keras.utils import to_categorical
-import matplotlib.pyplot as plt
 import numpy as np
+import cv2 as cv
+import sys
+import matplotlib.pyplot as plt
 
-# 2. CIFAR-10 데이터셋 불러오기
-(x_train, y_train), (x_test, y_test) = cifar10.load_data()
+img = cv.imread('IMG/edgeDetectionImage.jpg')
+imgS = cv.resize(img, dsize = (0, 0), fx = 0.5, fy = 0.5)
+gray = cv.cvtColor(imgS, cv.COLOR_BGR2GRAY)
+canny = cv.Canny(gray, 100, 200)
 
-# 3. 데이터 전처리
-# 이미지 픽셀값 0~255 → 0~1로 정규화
-x_train = x_train.astype('float32') / 255.0
-x_test = x_test.astype('float32') / 255.0
+img_lines = imgS.copy()
 
-# 정답 라벨을 One-hot 인코딩
-y_train = to_categorical(y_train, 10)
-y_test = to_categorical(y_test, 10)
+# 허프 변환을 통한 직선 검출
+lines = cv.HoughLinesP(
+    canny,              # 입력 에지 이미지
+    rho=1,              # 거리 해상도 (픽셀 단위)
+    theta=np.pi/180,    # 각도 해상도 (라디안 단위)
+    threshold=60,       # 직선으로 판단할 최소 교차점 수
+    minLineLength=40,   # 직선으로 간주할 최소 길이
+    maxLineGap=20       # 동일 선상의 점들을 연결할 최대 간격
+)
 
-# 4. CNN 모델 구성
-model = models.Sequential([
-    layers.Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)),
-    layers.MaxPooling2D((2, 2)),
+# 직선 그리기
+if lines is not None:
+    for line in lines:
+        x1, y1, x2, y2 = line[0]
+        cv.line(img_lines, (x1, y1), (x2, y2), (0, 0, 255), 2)
 
-    layers.Conv2D(64, (3, 3), activation='relu'),
-    layers.MaxPooling2D((2, 2)),
+# matplotlib로 원본 이미지 + 직선 검출 이미지 나란히 표시
+plt.figure(figsize=(10, 5))
 
-    layers.Conv2D(64, (3, 3), activation='relu'),
+plt.subplot(1, 2, 1)
+plt.imshow(cv.cvtColor(img, cv.COLOR_BGR2RGB))
+plt.title('Original Image')
+plt.axis('off')
 
-    layers.Flatten(),
-    layers.Dense(64, activation='relu'),
-    layers.Dense(10, activation='softmax')  # 10개 클래스 출력
-])
+plt.subplot(1, 2, 2)
+plt.imshow(cv.cvtColor(img_lines, cv.COLOR_BGR2RGB))
+plt.title('Hough Lines Detected')
+plt.axis('off')
 
-# 5. 모델 컴파일
-model.compile(optimizer='adam',
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
-
-# 6. 모델 훈련
-history = model.fit(x_train, y_train, epochs=10, batch_size=64,
-                    validation_split=0.1)
-
-# 7. 성능 평가
-test_loss, test_acc = model.evaluate(x_test, y_test)
-print(f"테스트 정확도: {test_acc:.4f}")
-
-# 8. 정확도 시각화
-plt.plot(history.history['accuracy'], label='Train Accuracy')
-plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
-plt.xlabel('Epoch')
-plt.ylabel('Accuracy')
-plt.title('CIFAR-10 Classification Accuracy')
-plt.legend()
-plt.grid(True)
+plt.tight_layout()
 plt.show()
-
-# 9. 테스트 이미지 예측 예시
-class_names = ['airplane', 'automobile', 'bird', 'cat', 'deer',
-               'dog', 'frog', 'horse', 'ship', 'truck']
-
-# 무작위 테스트 이미지 5장 예측
-sample_images = x_test[:5]
-sample_labels = y_test[:5]
-predictions = model.predict(sample_images)
-
-for i in range(3):
-    plt.imshow(sample_images[i])
-    plt.title(f"prediction: {class_names[np.argmax(predictions[i])]} | actual: {class_names[np.argmax(sample_labels[i])]}")
-    plt.axis('off')
-    plt.show()
