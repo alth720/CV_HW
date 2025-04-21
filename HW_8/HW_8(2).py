@@ -37,13 +37,6 @@ while cap.isOpened():
                 y = int(landmark.y * h)
                 cv2.circle(annotated_frame, (x, y), 1, (0, 255, 0), -1)
 
-            # 또는 스타일 있게 그리기 (선택)
-            # mp_drawing.draw_landmarks(
-            #     image=annotated_frame,
-            #     landmark_list=face_landmarks,
-            #     connections=mp_face_mesh.FACEMESH_TESSELATION,
-            #     landmark_drawing_spec=None,
-            #     connection_drawing_spec=mp_drawing_styles.get_default_face_mesh_tesselation_style())
 
     # 화면에 출력
     cv2.imshow("Face Mesh (Press ESC to Exit)", annotated_frame)
